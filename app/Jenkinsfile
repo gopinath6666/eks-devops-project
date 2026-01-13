@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    ECR_URI = "<ECR_URI>"
+    ECR_URI = "256056678996.dkr.ecr.ap-southeast-1.amazonaws.com/eks-devops-app"
     AWS_REGION = "ap-south-1"
   }
   stages {
