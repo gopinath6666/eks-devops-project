@@ -8,7 +8,7 @@ pipeline {
 
     stage('Checkout') {
       steps {
-        git 'https://github.com/your-username/eks-devops-project.git'
+        git 'https://github.com/gopinath6666/eks-devops-project.git'
       }
     }
 
