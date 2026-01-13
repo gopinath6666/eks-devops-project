@@ -1,0 +1,42 @@
+pipeline {
+  agent any
+  environment {
+    ECR_URI = "256056678996.dkr.ecr.ap-southeast-1.amazonaws.com/eks-devops-app"
+    AWS_REGION = "ap-south-1"
+  }
+  stages {
+
+    stage('Checkout') {
+      steps {
+        git 'https://github.com/gopinath6666/eks-devops-project.git'
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        sh 'docker build -t eks-devops-app .'
+      }
+    }
+
+    stage('Push Image to ECR') {
+      steps {
+        sh '''
+        aws ecr get-login-password --region $AWS_REGION |
+        docker login --username AWS --password-stdin $ECR_URI
+
+        docker tag eks-devops-app:latest $ECR_URI:latest
+        docker push $ECR_URI:latest
+        '''
+      }
+    }
+
+    stage('Deploy to EKS') {
+      steps {
+        sh '''
+        kubectl apply -f k8s/deployment.yaml
+        kubectl apply -f k8s/service.yaml
+        '''
+      }
+    }
+  }
+}
